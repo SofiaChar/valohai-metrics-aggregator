@@ -7,6 +7,5 @@
       - python gather_metrics.py {parameters}
     parameters:
     - name: task_id
-      default: '018d5aa3-4a4e-3d45-5f3a-17c7997734e3'
     - name: sleep_for_seconds
-      default: 60
+      default: 600
