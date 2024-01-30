@@ -19,9 +19,10 @@ This project is designed to gather metrics from the executions of a specific Val
 
 Ensure that you have set the following environment variable in Valohai:
 
-- **VALOHAI_API_TOKEN:** _(you can choose another name - don’t forget to change it in the code)_
-  - Go to your profile -> Authentication -> Manage Tokens -> Generate New Token -> Save it.
-  - Add the generated token as an environment variable in Valohai. You can add environment variables in a couple of ways in Valohai. 
+**VALOHAI_API_TOKEN:** _(you can choose another name - don’t forget to change it in the code)_
+  - Create Valohai token
+     - Go to your profile -> Authentication -> Manage Tokens -> Generate New Token -> Save it.
+  - Add the generated token as an environment variable in Valohai. Either: 
     - Add the environment variable when creating an execution from the UI (Create Execution -> Environment Variables). The env variable are only available in the execution where it was created. 
     - Add the project environment variable (Project Settings -> "Environment Variables" tab -> Check "Secret" checkbox). In this case, the env variable will be available for all executions of the project.
 
@@ -29,8 +30,8 @@ Ensure that you have set the following environment variable in Valohai:
 
 1. **API Calls:**
    - The project makes two API calls:
-      - [Get Executions' IDs](https://app.valohai.com/api/v0/tasks/{task_id}/execution_ids/): Obtain execution IDs of the specified task.
-      - [Download Metadata CSV](https://app.valohai.com/api/v0/executions/multi_download_metadata_csv/): Get metadata in CSV format from all task executions.
+      - [Get Executions' IDs](https://app.valohai.com/api/docs/#operation/TaskExecutionIds): Obtain execution IDs of the specified task.
+      - [Download Metadata CSV](https://app.valohai.com/api/docs/#operation/ExecutionMultiDownloadMetadataCsv): Get metadata in CSV format from all task executions.
 
 2. **Execution Flow:**
    - The script follows these main steps:
