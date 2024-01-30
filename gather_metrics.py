@@ -6,10 +6,11 @@ import valohai
 import csv
 import os
 
+# Retrieve Valohai API token from environment variable
 auth_token = os.environ.get("VALOHAI_API_TOKEN")
 HEADERS = {'Authorization': 'Token %s' % auth_token}
 
-
+# Function to get execution IDs for a given task
 def get_execution_ids(task_id):
     url = f'https://app.valohai.com/api/v0/tasks/{task_id}/execution_ids/'
     resp = requests.get(url, headers=HEADERS, json={})
@@ -17,7 +18,7 @@ def get_execution_ids(task_id):
     string_data = resp.content.decode('utf-8')
     return json.loads(string_data)
 
-
+# Function to download metadata CSV for a list of execution IDs
 def download_metadata_csv(executions_list):
     url = 'https://app.valohai.com/api/v0/executions/multi_download_metadata_csv/'
     the_json = {"ids": executions_list}
@@ -27,7 +28,7 @@ def download_metadata_csv(executions_list):
 
     return data_lines
 
-
+# Function to process data and exclude specified columns
 def process_data(data_lines, columns_to_exclude):
     lines = data_lines.strip().split('\n')
     header = lines[0].split(',')
@@ -57,7 +58,7 @@ def process_data(data_lines, columns_to_exclude):
 
     return result
 
-
+# Function to group data by epoch and calculate averages
 def group_and_calculate_averages(result, i):
     grouped_data = defaultdict(list)
     for entry in result:
@@ -71,7 +72,7 @@ def group_and_calculate_averages(result, i):
 
     return averages
 
-
+# Function to write averages to CSV
 def write_to_csv(csv_path, data, i):
     with open(csv_path, 'w', newline='') as csv_file:
         field_names = list(data[0].keys())
@@ -80,7 +81,7 @@ def write_to_csv(csv_path, data, i):
         csv_writer.writeheader()
         csv_writer.writerows(data)
 
-
+# Main process for continuous execution
 def main_process(exec_list, to_exclude, iterator):
     print('\n-------Start/restart the main process')
 
@@ -96,16 +97,19 @@ def main_process(exec_list, to_exclude, iterator):
 
     print('\n-------Saved current metrics to csv\n')
 
-
+# Script execution
 if __name__ == "__main__":
+    # Get task_id and sleep interval from Valohai parameters
     task_id = valohai.parameters("task_id").value
     sleep_for = valohai.parameters("sleep_for_seconds").value
 
-    # Exclude all feature that are not metrics
+    # Exclude features that are not metrics
     columns_to_exclude = ['execution_id', '_time', 'execution_title', 'execution_counter']
 
+    # Get execution IDs for the specified task
     executions_list = get_execution_ids(task_id)
 
+    # Continuous execution loop
     iterator_num = 1
     while True:
         main_process(executions_list, columns_to_exclude, iterator_num)
